@@ -1,4 +1,4 @@
-
+    
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -92,7 +92,9 @@ public class RicartAgarwala {
     data=sc.nextLine();
   //Reading number of edge and vertices
         numNodes=Integer.parseInt(data.substring(0,1));
+        if(numNodes==0) System.out.println("please enter valid no. of nodes!");
         numRequests=Integer.parseInt(data.substring(2,3));
+        if(numRequests==0) System.out.println("please enter valid no. of requests!");
 
 
         RicartAgarwala ra = new RicartAgarwala(numNodes);
@@ -110,7 +112,8 @@ public class RicartAgarwala {
 //            }
 
             ra.releaseCriticalSection(nodeId);
-            System.out.println("Node " + nodeId + " has released the critical section.\n");
+            System.out.println("Node " + nodeId + " has released the critical section after some time.\n");
         }
     }
 }
+    
