@@ -1,8 +1,10 @@
 
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,16 +36,20 @@ public class RicartAgarwala {
     public void requestCriticalSection(int nodeId) {
         localTimestamp.incrementAndGet();
         requestTimestamps[nodeId].set(localTimestamp.get());
+        
 
         for (int i = 0; i < numNodes; i++) {
             if (i != nodeId) {
+            	 System.out.println("The node : "+nodeId +" at Timestamp: " +  localTimestamp.get()+ " is Requesting to: "+i);
                 // Send request message to other nodes
                 receiveRequest(nodeId, i);
+               
             }
         }
-
-        while (replyCounts[nodeId].get() < numNodes - 1) {
+        int re=replyCounts[nodeId].get();
+        while ( re< numNodes - 1) {
             // Wait for replies from all other nodes
+        	
         }
     }
 
@@ -66,6 +72,7 @@ public class RicartAgarwala {
             (requestTimestamps[senderId].get() == requestTimestamps[receiverId].get() && senderId < receiverId)) {
             // Send reply message
             receiveReply(receiverId, senderId);
+            System.out.println("Node "+receiverId + " sends reply to Node "+ senderId  +"\n");
         } else {
             replyDeferred[senderId].set(true);
         }
@@ -92,18 +99,18 @@ public class RicartAgarwala {
 
         for (int i = 0; i < numRequests; i++) {
             int nodeId = i % numNodes;
-            System.out.println("Node " + nodeId + " is requesting the critical section.");
+            System.out.println("Node " + nodeId + " is requesting the critical section.\n");
             ra.requestCriticalSection(nodeId);
             System.out.println("Node " + nodeId + " has entered the critical section (SUCCESS).");
 
-            // Print the status of the lists
-            System.out.println("Status of lists:");
-            for (int j = 0; j < numNodes; j++) {
-                System.out.println("Node " + j + ": " + Arrays.toString(ra.getReplyCounts()));
-            }
+//            // Print the status of the lists
+//            System.out.println("Status of lists:");
+//            for (int j = 0; j < numNodes; j++) {
+//                System.out.println("Node " + j + ": " + Arrays.toString(ra.getReplyCounts()));
+//            }
 
             ra.releaseCriticalSection(nodeId);
-            System.out.println("Node " + nodeId + " has released the critical section.");
+            System.out.println("Node " + nodeId + " has released the critical section.\n");
         }
     }
 }
