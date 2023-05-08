@@ -1,15 +1,19 @@
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Arrays;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
-public class RicartAgrawala {
+public class RicartAgarwala {
     private final int numNodes;
     private final AtomicInteger[] requestTimestamps;
     private final AtomicBoolean[] replyDeferred;
     private final AtomicInteger[] replyCounts;
     private final AtomicInteger localTimestamp;
 
-    public RicartAgrawala(int numNodes) {
+    public RicartAgarwala(int numNodes) {
         this.numNodes = numNodes;
         this.requestTimestamps = new AtomicInteger[numNodes];
         this.replyDeferred = new AtomicBoolean[numNodes];
@@ -70,10 +74,21 @@ public class RicartAgrawala {
     private void receiveReply(int senderId, int receiverId) {
         replyCounts[receiverId].incrementAndGet();
     }
-     public static void main(String[] args) {
-        int numNodes = 5;
-        int numRequests = 10;
-        RicartAgrawala ra = new RicartAgrawala(numNodes);
+     public static void main(String[] args) throws FileNotFoundException {
+        int numNodes;
+        int numRequests;
+        String data; 
+        // Reading a file
+    FileReader fp = new FileReader("input.txt");
+    Scanner sc=new Scanner(fp);
+  
+    data=sc.nextLine();
+  //Reading number of edge and vertices
+        numNodes=Integer.parseInt(data.substring(0,1));
+        numRequests=Integer.parseInt(data.substring(2,3));
+
+
+        RicartAgarwala ra = new RicartAgarwala(numNodes);
 
         for (int i = 0; i < numRequests; i++) {
             int nodeId = i % numNodes;
